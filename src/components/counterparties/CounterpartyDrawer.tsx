@@ -8,7 +8,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import {
   Sparkles, Shield, Scale, Newspaper, Banknote, FileText, Clock, TrendingUp, TrendingDown,
-  CheckCircle2, ThumbsDown, Pin, Plus, AlertTriangle, ExternalLink, Minus
+  CheckCircle2, ThumbsDown, Pin, Plus, AlertTriangle, ExternalLink, Minus, CheckSquare, Mail
 } from 'lucide-react';
 import { recentEvents, type Counterparty } from '@/data/mockData';
 
@@ -33,9 +33,11 @@ interface CounterpartyDrawerProps {
   counterparty: Counterparty | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onCreateTask?: (c: Counterparty) => void;
+  onSendNotification?: (c: Counterparty) => void;
 }
 
-export function CounterpartyDrawer({ counterparty, open, onOpenChange }: CounterpartyDrawerProps) {
+export function CounterpartyDrawer({ counterparty, open, onOpenChange, onCreateTask, onSendNotification }: CounterpartyDrawerProps) {
   const [disagreeOpen, setDisagreeOpen] = useState(false);
   const [disagreeReason, setDisagreeReason] = useState('');
   const [disagreeComment, setDisagreeComment] = useState('');
@@ -75,6 +77,7 @@ export function CounterpartyDrawer({ counterparty, open, onOpenChange }: Counter
             <div className="flex items-start gap-3">
               <div className="flex-1">
                 <SheetTitle className="text-lg mb-1">{c.form} «{c.name}»</SheetTitle>
+                {c.inn && <div className="text-[11px] text-muted-foreground mb-1.5">ИНН: {c.inn}</div>}
                 <div className="flex items-center gap-2">
                   <StatusBadge status={c.status} />
                   <RiskScore score={c.riskScore} />
@@ -83,20 +86,48 @@ export function CounterpartyDrawer({ counterparty, open, onOpenChange }: Counter
             </div>
           </SheetHeader>
 
+          {/* Debt KPIs */}
+          {(c.debtTotal || c.debtOverdue || c.debtAtRisk) && (
+            <div className="grid grid-cols-3 gap-2 mb-4">
+              {c.debtTotal && (
+                <div className="bg-background rounded-lg p-3 text-center">
+                  <div className="text-lg font-bold">{c.debtTotal}</div>
+                  <div className="text-[10px] text-muted-foreground">ДЗ, млн ₽</div>
+                </div>
+              )}
+              {c.debtOverdue && (
+                <div className="bg-[hsl(var(--status-warning-bg))] rounded-lg p-3 text-center border border-[hsl(var(--status-warning)/0.15)]">
+                  <div className="text-lg font-bold text-[hsl(var(--status-warning))]">{c.debtOverdue}</div>
+                  <div className="text-[10px] text-muted-foreground">Просрочка, млн ₽</div>
+                </div>
+              )}
+              {c.debtAtRisk && (
+                <div className="bg-[hsl(var(--status-danger-bg))] rounded-lg p-3 text-center border border-[hsl(var(--status-danger)/0.15)]">
+                  <div className="text-lg font-bold text-[hsl(var(--status-danger))]">{c.debtAtRisk}</div>
+                  <div className="text-[10px] text-muted-foreground">Риск, млн ₽</div>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Action buttons */}
           <div className="flex flex-wrap gap-2 mb-6">
-            <Button size="sm">
-              <Plus className="w-3.5 h-3.5 mr-1" />Создать меры
-            </Button>
-            <Button size="sm" variant="outline">
-              <CheckCircle2 className="w-3.5 h-3.5 mr-1" />Проверено
-            </Button>
+            <Button size="sm"><Plus className="w-3.5 h-3.5 mr-1" />Создать меры</Button>
+            <Button size="sm" variant="outline"><CheckCircle2 className="w-3.5 h-3.5 mr-1" />Проверено</Button>
             <Button size="sm" variant="outline" onClick={() => setDisagreeOpen(true)}>
               <ThumbsDown className="w-3.5 h-3.5 mr-1" />Не согласен с AI
             </Button>
-            <Button size="sm" variant="outline">
-              <Pin className="w-3.5 h-3.5 mr-1" />В фокус
-            </Button>
+            <Button size="sm" variant="outline"><Pin className="w-3.5 h-3.5 mr-1" />В фокус</Button>
+            {onCreateTask && (
+              <Button size="sm" variant="outline" onClick={() => onCreateTask(c)}>
+                <CheckSquare className="w-3.5 h-3.5 mr-1" />Задача
+              </Button>
+            )}
+            {onSendNotification && (
+              <Button size="sm" variant="outline" onClick={() => onSendNotification(c)}>
+                <Mail className="w-3.5 h-3.5 mr-1" />Письмо
+              </Button>
+            )}
           </div>
 
           <div className="space-y-6">
@@ -213,17 +244,11 @@ export function CounterpartyDrawer({ counterparty, open, onOpenChange }: Counter
                 </div>
               ))}
             </RadioGroup>
-            <Textarea
-              placeholder="Комментарий (необязательно)..."
-              value={disagreeComment}
-              onChange={e => setDisagreeComment(e.target.value)}
-              rows={3}
-            />
+            <Textarea placeholder="Комментарий (необязательно)..." value={disagreeComment} onChange={e => setDisagreeComment(e.target.value)} rows={3} />
             <div className="flex gap-2 justify-end">
               <Button variant="outline" onClick={() => setDisagreeOpen(false)}>Отмена</Button>
               <Button onClick={() => { setDisagreeOpen(false); setDisagreeReason(''); setDisagreeComment(''); }}>
-                <Sparkles className="w-3.5 h-3.5 mr-1.5" />
-                Отправить на переанализ
+                <Sparkles className="w-3.5 h-3.5 mr-1.5" />Отправить на переанализ
               </Button>
             </div>
           </div>

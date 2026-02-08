@@ -1,4 +1,4 @@
-import { ArrowRight, TrendingDown, TrendingUp, AlertTriangle, Sparkles } from 'lucide-react';
+import { ArrowRight, TrendingDown, TrendingUp, AlertTriangle, Sparkles, Banknote } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { counterpartySummary } from '@/data/mockData';
 
@@ -72,7 +72,7 @@ function PartnersPanel({ onOpenDrawer, onGoToCounterparties }: { onOpenDrawer: (
         <div className="flex items-start gap-2">
           <Sparkles className="w-3.5 h-3.5 text-primary mt-0.5 shrink-0" />
           <p className="text-xs leading-relaxed text-accent-foreground">
-            Обнаружено ухудшение у 3 контрагентов за последнюю неделю. Основные причины — судебные дела и финансовые проблемы. Рекомендуется проверить красную зону.
+            Обнаружено ухудшение у 3 контрагентов за последнюю неделю. Основные причины — судебные дела и финансовые проблемы.
           </p>
         </div>
       </div>
@@ -89,6 +89,28 @@ function PartnersPanel({ onOpenDrawer, onGoToCounterparties }: { onOpenDrawer: (
         <div className="bg-background rounded-lg p-3 text-center">
           <div className="text-xl font-bold text-[hsl(var(--status-warning))]">{s.yellow}</div>
           <div className="text-[10px] text-muted-foreground">🟡 Жёлтых</div>
+        </div>
+      </div>
+
+      {/* Дебиторская задолженность */}
+      <div className="bg-background rounded-lg p-3">
+        <div className="flex items-center gap-1.5 mb-2">
+          <Banknote className="w-3.5 h-3.5 text-muted-foreground" />
+          <h4 className="text-xs font-semibold">Дебиторская задолженность</h4>
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          <div>
+            <div className="text-lg font-bold">{s.debtTotal}</div>
+            <div className="text-[10px] text-muted-foreground">Общая ДЗ, млн ₽</div>
+          </div>
+          <div>
+            <div className="text-lg font-bold text-[hsl(var(--status-warning))]">{s.debtOverdue}</div>
+            <div className="text-[10px] text-muted-foreground">Просроченная</div>
+          </div>
+          <div>
+            <div className="text-lg font-bold text-[hsl(var(--status-danger))]">{s.debtAtRisk}</div>
+            <div className="text-[10px] text-muted-foreground">Под риском</div>
+          </div>
         </div>
       </div>
 
@@ -119,12 +141,9 @@ function PartnersPanel({ onOpenDrawer, onGoToCounterparties }: { onOpenDrawer: (
       </div>
 
       <div className="space-y-2 pt-1">
-        <Button className="w-full" size="sm" onClick={onOpenDrawer}>
-          Открыть детали
-        </Button>
+        <Button className="w-full" size="sm" onClick={onOpenDrawer}>Открыть детали</Button>
         <Button variant="outline" className="w-full" size="sm" onClick={onGoToCounterparties}>
-          Перейти в Контрагентов
-          <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+          Перейти в Контрагентов <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
         </Button>
       </div>
     </div>
