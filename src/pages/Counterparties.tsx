@@ -7,8 +7,10 @@ import { mockCounterparties, type Counterparty } from '@/data/mockData';
 import { CounterpartyDrawer } from '@/components/counterparties/CounterpartyDrawer';
 import { DigestCards } from '@/components/counterparties/DigestCards';
 import { CounterpartyCardGrid } from '@/components/counterparties/CounterpartyCardGrid';
-
 import { RiskDiagram } from '@/components/counterparties/RiskDiagram';
+import { OperativeControl } from '@/components/counterparties/OperativeControl';
+import { CreateTaskModal } from '@/components/counterparties/CreateTaskModal';
+import { SendNotificationModal } from '@/components/counterparties/SendNotificationModal';
 
 const Counterparties = () => {
   const [search, setSearch] = useState('');
@@ -16,18 +18,22 @@ const Counterparties = () => {
   const [selectedCounterparty, setSelectedCounterparty] = useState<Counterparty | null>(null);
   const [showAiBanner, setShowAiBanner] = useState(true);
   const [viewMode, setViewMode] = useState<'cards' | 'diagram'>('cards');
+  const [taskTarget, setTaskTarget] = useState<Counterparty | null>(null);
+  const [notifTarget, setNotifTarget] = useState<Counterparty | null>(null);
 
   const filtered = useMemo(() => {
     let list = mockCounterparties;
     if (search) {
       const q = search.toLowerCase();
-      list = list.filter(c => c.name.toLowerCase().includes(q) || c.form.toLowerCase().includes(q));
+      list = list.filter(c => c.name.toLowerCase().includes(q) || c.form.toLowerCase().includes(q) || (c.inn && c.inn.includes(q)));
     }
     switch (activeTab) {
       case 'critical': return list.filter(c => c.status === 'red');
-      case 'observation': return list.filter(c => c.status === 'yellow');
       case 'changes': return list.filter(c => c.trend !== 'stable');
+      case 'observation': return list.filter(c => c.status === 'yellow');
       case 'focus': return list.filter(c => c.pinned);
+      case 'blacklist': return [];
+      case 'all': return list;
       default: return list;
     }
   }, [search, activeTab]);
@@ -52,6 +58,9 @@ const Counterparties = () => {
 
       {/* Digest */}
       <DigestCards />
+
+      {/* Operative control */}
+      <OperativeControl onSelect={setSelectedCounterparty} />
 
       {/* AI banner */}
       {showAiBanner && (
@@ -83,12 +92,12 @@ const Counterparties = () => {
       <div className="flex items-center justify-between mb-4">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList>
-            <TabsTrigger value="all">Все</TabsTrigger>
-            <TabsTrigger value="critical">🔴 Критичные</TabsTrigger>
+            <TabsTrigger value="critical">🔴 Критично</TabsTrigger>
+            <TabsTrigger value="changes">🔄 Изменения</TabsTrigger>
             <TabsTrigger value="observation">🟡 Наблюдение</TabsTrigger>
-            <TabsTrigger value="changes">Изменения</TabsTrigger>
-            <TabsTrigger value="focus">Мой фокус</TabsTrigger>
-            <TabsTrigger value="blacklist">Чёрный список</TabsTrigger>
+            <TabsTrigger value="focus">⭐ Мой фокус</TabsTrigger>
+            <TabsTrigger value="blacklist">⚫ Чёрный список</TabsTrigger>
+            <TabsTrigger value="all">Все</TabsTrigger>
           </TabsList>
         </Tabs>
 
@@ -115,7 +124,12 @@ const Counterparties = () => {
       {viewMode === 'diagram' ? (
         <RiskDiagram onSelectCounterparty={setSelectedCounterparty} />
       ) : (
-        <CounterpartyCardGrid counterparties={filtered} onSelect={setSelectedCounterparty} />
+        <CounterpartyCardGrid
+          counterparties={filtered}
+          onSelect={setSelectedCounterparty}
+          onCreateTask={setTaskTarget}
+          onSendNotification={setNotifTarget}
+        />
       )}
 
       {/* Drawer */}
@@ -123,6 +137,22 @@ const Counterparties = () => {
         counterparty={selectedCounterparty}
         open={!!selectedCounterparty}
         onOpenChange={(open) => { if (!open) setSelectedCounterparty(null); }}
+        onCreateTask={(c) => { setSelectedCounterparty(null); setTaskTarget(c); }}
+        onSendNotification={(c) => { setSelectedCounterparty(null); setNotifTarget(c); }}
+      />
+
+      {/* Task modal */}
+      <CreateTaskModal
+        counterparty={taskTarget}
+        open={!!taskTarget}
+        onOpenChange={(open) => { if (!open) setTaskTarget(null); }}
+      />
+
+      {/* Notification modal */}
+      <SendNotificationModal
+        counterparty={notifTarget}
+        open={!!notifTarget}
+        onOpenChange={(open) => { if (!open) setNotifTarget(null); }}
       />
     </div>
   );

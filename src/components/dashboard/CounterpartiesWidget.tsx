@@ -1,4 +1,4 @@
-import { Users, TrendingUp, TrendingDown, AlertTriangle, ArrowRight, LayoutGrid } from 'lucide-react';
+import { Users, TrendingUp, TrendingDown, AlertTriangle, ArrowRight, LayoutGrid, CircleDot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { counterpartySummary } from '@/data/mockData';
 
@@ -18,7 +18,7 @@ export function CounterpartiesWidget({ onOpenCounterparties, onOpenRed }: Counte
       </div>
 
       {/* KPI row */}
-      <div className="grid grid-cols-3 gap-4 mb-5">
+      <div className="grid grid-cols-4 gap-4 mb-5">
         <div className="bg-background rounded-lg p-3 text-center">
           <div className="text-2xl font-bold">{s.total}</div>
           <div className="text-[11px] text-muted-foreground">Всего</div>
@@ -35,18 +35,24 @@ export function CounterpartiesWidget({ onOpenCounterparties, onOpenRed }: Counte
             <span className="status-dot-warning" /> Средний риск
           </div>
         </div>
+        <div className="bg-background rounded-lg p-3 text-center">
+          <div className="flex items-center justify-center gap-1 mb-0.5">
+            <CircleDot className="w-3.5 h-3.5 text-muted-foreground" />
+          </div>
+          <div className="text-lg font-bold">{s.debtOver100Days} млн ₽</div>
+          <div className="text-[10px] text-muted-foreground">НДЗ &gt; 100 дней</div>
+        </div>
       </div>
 
       {/* Reasons + Changes */}
       <div className="grid grid-cols-2 gap-4 mb-5">
         <div className="bg-background rounded-lg p-3">
-          <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Основные причины</h4>
-          <div className="space-y-1.5">
-            {s.topReasons.slice(0, 3).map((r, i) => (
-              <div key={i} className="flex items-center gap-1.5 text-xs text-foreground">
-                <AlertTriangle className="w-3 h-3 text-[hsl(var(--status-warning))] shrink-0" />
-                <span className="truncate">{r}</span>
-              </div>
+          <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Топ-3 причины ухудшений</h4>
+          <div className="flex flex-wrap gap-1.5">
+            {['Судебные дела / ФССП', 'Банкротство', 'Негатив в СМИ'].map((r, i) => (
+              <span key={i} className="text-[11px] px-2 py-1 rounded-full bg-[hsl(var(--status-danger-bg))] text-[hsl(var(--status-danger-foreground))] border border-[hsl(var(--status-danger)/0.15)] font-medium">
+                {r}
+              </span>
             ))}
           </div>
         </div>
