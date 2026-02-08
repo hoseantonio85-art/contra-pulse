@@ -50,15 +50,17 @@ export const mockCounterparties: Counterparty[] = [
 
 export const counterpartySummary = {
   total: 1000,
-  red: 12,
-  yellow: 34,
-  green: 954,
-  changesWeek: { worsened: 3, improved: 5 },
+  red: 24,
+  yellow: 87,
+  green: 889,
+  changesWeek: { worsened: 12, improved: 5 },
+  changesMonth: { worsened: 28, improved: 14 },
   topReasons: [
     'Судебные дела / ФССП',
     'Негатив в СМИ',
     'Финансовые просадки / задержки платежей',
   ],
+  newProblematic: 7,
 };
 
 export interface TimelineEvent {

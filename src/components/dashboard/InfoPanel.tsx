@@ -77,22 +77,30 @@ function PartnersPanel({ onOpenDrawer, onGoToCounterparties }: { onOpenDrawer: (
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         <div className="bg-background rounded-lg p-3 text-center">
           <div className="text-xl font-bold">{s.total}</div>
           <div className="text-[10px] text-muted-foreground">Всего</div>
         </div>
         <div className="bg-background rounded-lg p-3 text-center">
           <div className="text-xl font-bold text-[hsl(var(--status-danger))]">{s.red}</div>
-          <div className="text-[10px] text-muted-foreground">Критичных</div>
+          <div className="text-[10px] text-muted-foreground">🔴 Красных</div>
         </div>
         <div className="bg-background rounded-lg p-3 text-center">
           <div className="text-xl font-bold text-[hsl(var(--status-warning))]">{s.yellow}</div>
-          <div className="text-[10px] text-muted-foreground">Наблюдение</div>
+          <div className="text-[10px] text-muted-foreground">🟡 Жёлтых</div>
         </div>
-        <div className="bg-background rounded-lg p-3 text-center">
-          <div className="text-xl font-bold text-[hsl(var(--status-success))]">{s.green}</div>
-          <div className="text-[10px] text-muted-foreground">Норма</div>
+      </div>
+
+      <div className="bg-background rounded-lg p-3">
+        <h4 className="text-xs font-semibold mb-2">Топ причин ухудшений</h4>
+        <div className="space-y-1.5">
+          {s.topReasons.slice(0, 2).map((r, i) => (
+            <div key={i} className="flex items-center gap-2 text-xs text-muted-foreground">
+              <AlertTriangle className="w-3 h-3 text-[hsl(var(--status-warning))]" />
+              {r}
+            </div>
+          ))}
         </div>
       </div>
 
@@ -107,18 +115,6 @@ function PartnersPanel({ onOpenDrawer, onGoToCounterparties }: { onOpenDrawer: (
             <TrendingDown className="w-3.5 h-3.5 text-[hsl(var(--status-success))]" />
             <span className="font-medium">улучшилось +{s.changesWeek.improved}</span>
           </span>
-        </div>
-      </div>
-
-      <div className="bg-background rounded-lg p-3">
-        <h4 className="text-xs font-semibold mb-2">Топ причин</h4>
-        <div className="space-y-1.5">
-          {s.topReasons.map((r, i) => (
-            <div key={i} className="flex items-center gap-2 text-xs text-muted-foreground">
-              <AlertTriangle className="w-3 h-3 text-[hsl(var(--status-warning))]" />
-              {r}
-            </div>
-          ))}
         </div>
       </div>
 

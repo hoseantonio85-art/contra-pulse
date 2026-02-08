@@ -57,7 +57,7 @@ const Index = () => {
       <div className="mb-6">
         <CounterpartiesWidget
           onOpenCounterparties={goToCounterparties}
-          onOpenChanges={() => { setPartnersDrawerOpen(true); }}
+          onOpenRed={() => navigate('/counterparties?tab=critical')}
         />
       </div>
 
