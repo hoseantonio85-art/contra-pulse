@@ -4,17 +4,23 @@ export interface RiskSegment {
   shortName: string;
   value: number;
   color: string;
+  icon?: string;
+  forecastLoss: number;
+  actualLoss: number;
+  bottomLabel: string;
+  bottomValue: string;
+  bottomType?: 'warning' | 'danger' | 'neutral';
 }
 
 export const riskSegments: RiskSegment[] = [
-  { id: 'legislation', name: 'Законодательство и регуляторы', shortName: 'Законодательство', value: 538, color: 'hsl(244, 58%, 68%)' },
-  { id: 'external', name: 'Внешняя среда', shortName: 'Внешняя среда', value: 90, color: 'hsl(187, 80%, 48%)' },
-  { id: 'clients', name: 'Клиенты и продукты', shortName: 'Клиенты', value: 557, color: 'hsl(45, 93%, 58%)' },
-  { id: 'partners', name: 'Партнёры и поставки', shortName: 'Партнёры', value: 85, color: 'hsl(152, 69%, 50%)' },
-  { id: 'processes', name: 'Процессы и контроль', shortName: 'Процессы', value: 1078, color: 'hsl(217, 71%, 53%)' },
-  { id: 'personnel', name: 'Персонал и культура', shortName: 'Персонал', value: 125, color: 'hsl(27, 87%, 54%)' },
-  { id: 'projects', name: 'Проекты и изменения', shortName: 'Проекты', value: 210, color: 'hsl(330, 65%, 60%)' },
-  { id: 'technology', name: 'Технологии и данные', shortName: 'Технологии', value: 61, color: 'hsl(262, 60%, 68%)' },
+  { id: 'clients', name: 'Клиенты и продукты', shortName: 'Клиенты и продукты', value: 557, color: 'hsl(45, 93%, 58%)', icon: '🏛', forecastLoss: 571, actualLoss: 557, bottomLabel: 'Геополитические риски', bottomValue: '92%', bottomType: 'warning' },
+  { id: 'processes', name: 'Процессы и контроль', shortName: 'Процессы и контроль', value: 1078, color: 'hsl(217, 71%, 53%)', icon: '📊', forecastLoss: 1199, actualLoss: 1078, bottomLabel: 'Возмещения ущерба клиентам', bottomValue: '72%', bottomType: 'danger' },
+  { id: 'projects', name: 'Проекты и изменения', shortName: 'Проекты и изменения', value: 210, color: 'hsl(330, 65%, 60%)', icon: '🚀', forecastLoss: 211, actualLoss: 210, bottomLabel: 'Возмещения ущерба клиентам', bottomValue: '72%', bottomType: 'danger' },
+  { id: 'external', name: 'Внешняя среда', shortName: 'Внешняя среда', value: 90, color: 'hsl(187, 80%, 48%)', icon: '🌐', forecastLoss: 147, actualLoss: 90, bottomLabel: 'Возмещения ущерба клиентам', bottomValue: '72%', bottomType: 'neutral' },
+  { id: 'partners', name: 'Партнёры и поставки', shortName: 'Партнёры и поставки', value: 85, color: 'hsl(152, 69%, 50%)', icon: '🤝', forecastLoss: 114, actualLoss: 85, bottomLabel: 'Возмещения ущерба клиентам', bottomValue: '72%', bottomType: 'neutral' },
+  { id: 'personnel', name: 'Персонал и культура', shortName: 'Персонал и культура', value: 125, color: 'hsl(27, 87%, 54%)', icon: '👥', forecastLoss: 1094, actualLoss: 125, bottomLabel: 'Прогноз высокий, мер нет', bottomValue: '', bottomType: 'danger' },
+  { id: 'technology', name: 'Технологии и данные', shortName: 'Технологии и данные', value: 61, color: 'hsl(262, 60%, 68%)', icon: '💻', forecastLoss: 98, actualLoss: 61, bottomLabel: 'Возмещения ущерба клиентам', bottomValue: '72%', bottomType: 'neutral' },
+  { id: 'legislation', name: 'Правовые вопросы', shortName: 'Правовые вопросы', value: 538, color: 'hsl(244, 58%, 68%)', icon: '⚖️', forecastLoss: 761, actualLoss: 538, bottomLabel: 'Возмещения ущерба клиентам', bottomValue: '72%', bottomType: 'neutral' },
 ];
 
 export interface Counterparty {
