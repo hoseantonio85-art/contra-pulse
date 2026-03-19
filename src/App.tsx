@@ -10,12 +10,20 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+// LOVABLE_KEEP_START
+// Не изменять этот блок: специфическая настройка basename для GitHub Pages
+const isGitHubPages = window.location.hostname.includes("github.io");
+const basename = isGitHubPages ? "/contra-pulse" : "";
+// LOVABLE_KEEP_END
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      {/\* LOVABLE_KEEP_START \*/}
+      <BrowserRouter basename={basename}>
+      {/\* LOVABLE_KEEP_END \*/}
         <AppLayout>
           <Routes>
             <Route path="/" element={<Index />} />
